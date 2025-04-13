@@ -1,33 +1,61 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import { useState } from 'react'
+import Header from './sections/Header'
+import Status from './sections/Status'
+import Chips from './sections/Chips'
+import Guess  from  './sections/Guess'
+import Keyboard from './sections/Keyboard'
+
+
 
 function App() {
-  const [count, setCount] = useState(0)
+const [currentWord, setCurrentWord] = useState("react")
+const [guessedLetters, setGuessedLetters] = useState([])
 
+console.log('guessedLetters: ', guessedLetters)
+
+
+const letterArray = currentWord.split("")
+const lettersObj = letterArray.map((letter) => {
+  const guessed = guessedLetters.includes(letter)
+  return {letter: letter, guessed: guessed}
+})
+console.log('lettersObj: ', lettersObj)
+
+const alphabet = "abcdefghijklmnopqrstuvwxyz"
+const allLetters = alphabet.split("")
+const allLettersObj = allLetters.map((letter) => {
+  const isPressed = guessedLetters.includes(letter)
+  const isCorrect = letterArray.includes(letter)
+  return {letter: letter, pressed: isPressed, correct: isCorrect}
+})
+
+
+//Handles clicks to the keyboard portion of the page
+function keyboardClickHandler(e) {
+  e.preventDefault()
+  //The letter being clicked is attached to some data attributes
+  const currentLetter = e.target.dataset.letter
+  //Check to make sure that the letter being pressed isn't already in the list of guessed letters
+  //If it isn't in the list, add it
+  //Since this is a state change it forces a re-render
+  setGuessedLetters((prevGuesses) => {
+    return prevGuesses.includes(currentLetter) ? prevGuesses : [...prevGuesses, currentLetter]
+})
+  }
+
+
+  //Returns the App component jsx
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Header />
+      <main>
+        <Status value="You Win" subvalue="Well done! 🎉" />
+        <Chips />
+        <Guess word={letterArray} content={lettersObj}/>
+        <Keyboard content={allLettersObj} handler={keyboardClickHandler} />
+        <button className="new-game">New Game</button>
+      </main>
     </>
   )
 }
