@@ -1,11 +1,12 @@
 import Chip from "../components/Chip"
-import { languages } from "../languages"
 
 
-export default function Chips() {
 
-  const chipList = languages.map((language, index) => {
-    return <Chip key={index} value={language.name} color={language.color} background={language.backgroundColor} />
+export default function Chips(props) {
+  const missedLetters = props.missed
+  
+  const chipList = props.languages.map((language, index) => {
+    return <Chip key={index} wrong={index < missedLetters ? true : false} value={language.name} color={language.color} background={language.backgroundColor} />
   })
 
   return (

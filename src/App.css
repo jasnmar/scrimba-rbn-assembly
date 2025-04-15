@@ -23,11 +23,22 @@ h1 {
 .status {
   width: 360px;
   height: 60px;
-  background: #10A95B;
   text-align: center;
   color: #F9F4DA;
   font-size: 1rem;
   border-radius: 8px;
+}
+
+.win {
+  background-color: #10A95B;
+}
+
+.lose {
+  background-color: #EC5D49;
+}
+
+.update {
+  background-color: #7A5EA7
 }
 
 .status > h2 {
@@ -56,12 +67,30 @@ h1 {
   margin-top: 2rem;
 }
 
+
+
 .chip {
   padding: 5px 10px;
   border-radius: 8px;
   font-size: .75rem;
   font-weight: bold;
   margin: .1rem;
+  position: relative;
+}
+
+div.lost::before {
+  content: "💀";
+  position: absolute;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  font-size: 0.85rem;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.7);
 }
 
 .word {
