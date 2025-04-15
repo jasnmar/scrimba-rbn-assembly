@@ -2,7 +2,9 @@ import { clsx } from "clsx"
 
 export default function LetterBox(props) {
   const classNames = clsx(
-    "letter", props.guessed ? "guessed" : "not-guessed"
+    "letter", 
+    props.lost && !props.guessed ? "lost" : null,
+    props.guessed ? "guessed" : "not-guessed"
   )
   return (
     <>

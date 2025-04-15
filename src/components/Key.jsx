@@ -7,7 +7,14 @@ export default function Key(props) {
   )
   return (
     <>
-      <button data-letter={props.letter} onClick={props.handler} className={classNames}>{props.letter}</button>
+      <button 
+        data-letter={props.letter} 
+        disabled={props.disabled} 
+        aria-disabled={props.disabled} 
+        onClick={props.handler} 
+        className={classNames}>
+      {props.letter}
+      </button>
     </>
   )
 }

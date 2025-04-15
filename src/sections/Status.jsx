@@ -8,7 +8,7 @@ export default function Status(props) {
   )
 
   return (
-    <section className={classList}>
+    <section aria-live="polite" aria-role="status" className={classList}>
       <h2>{props.value}</h2>
       <p>{props.subvalue}</p>
     </section>

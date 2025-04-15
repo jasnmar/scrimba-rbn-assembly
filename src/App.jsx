@@ -1,12 +1,14 @@
 import './App.css'
 import { useState } from 'react'
+import Confetti from 'react-confetti'
 import Header from './sections/Header'
 import Status from './sections/Status'
 import Chips from './sections/Chips'
 import Guess  from  './sections/Guess'
 import Keyboard from './sections/Keyboard'
+import SrHelper from './components/SrHelper'
 import { languages } from "./languages"
-import { getFarewellText } from './utils'
+import { getFarewellText, getWord } from './utils'
 
 
 
@@ -14,7 +16,7 @@ function App() {
 
 //State
 //currentWord is the word being guessed
-const [currentWord, setCurrentWord] = useState("react")
+const [currentWord, setCurrentWord] = useState(() => getWord())
 //GuessedLetters is an array of letters that have been guessed
 const [guessedLetters, setGuessedLetters] = useState([])
 
@@ -25,10 +27,12 @@ const lettersObj = letterArray.map((letter) => {
   return {letter: letter, guessed: guessed}
 })
 
+
 const wrongGuessCount = guessedLetters.filter((letter) => {
   return !currentWord.includes(letter)
 }).length
 
+const numGuessesLeft = languages.length - wrongGuessCount - 1
 const gameLost = wrongGuessCount >= languages.length - 1
 const gameWon = currentWord.split("").every((letter) => {
   return guessedLetters.includes(letter)
@@ -36,14 +40,10 @@ const gameWon = currentWord.split("").every((letter) => {
 const gameOver = gameLost || gameWon
 
 const lastGuessedLetter = guessedLetters[guessedLetters.length - 1]
-console.log('lastGuessedLetter: ', lastGuessedLetter)
 const lastLetterIncorrect = !currentWord.includes(lastGuessedLetter) && lastGuessedLetter !== undefined
-console.log('lastLetterIncorrect: ', lastLetterIncorrect)
 const farewellText = (wrongGuessCount  > 0) && lastLetterIncorrect ? getFarewellText(languages[wrongGuessCount-1].name) : null
 
 let statusElem = setStatus()
-
-
 function setStatus() {
   if(gameWon) {
     return <Status value="You Win" status={"win"} subvalue="Well done! 🎉" />
@@ -67,6 +67,8 @@ const allLettersObj = allLetters.map((letter) => {
 //Handles clicks to the keyboard portion of the page
 function keyboardClickHandler(e) {
   e.preventDefault()
+  if(gameOver) return
+  //The)
   //The letter being clicked is attached to some data attributes
   const currentLetter = e.target.dataset.letter
   //Check to make sure that the letter being pressed isn't already in the list of guessed letters
@@ -81,17 +83,24 @@ function keyboardClickHandler(e) {
   })
 }
 
+  function restartGame() {
+    setCurrentWord(getWord())
+    setGuessedLetters([])
+  }
+
 
   //Returns the App component jsx
   return (
     <>
       <Header />
       <main>
+        {gameWon && <Confetti />}
         {statusElem}
         <Chips languages={languages} missed={wrongGuessCount} />
-        <Guess word={letterArray} content={lettersObj}/>
-        <Keyboard content={allLettersObj} handler={keyboardClickHandler} />
-        {gameOver &&  <button className="new-game">New Game</button>}
+        <Guess word={letterArray} lost={gameLost} content={lettersObj}/>
+        <SrHelper currentWord={currentWord} numGuessesLeft={numGuessesLeft} guessedLetters={guessedLetters} lastGuessedLetter={lastGuessedLetter} />
+        <Keyboard content={allLettersObj} disabled={gameOver} handler={keyboardClickHandler} />
+        {gameOver &&  <button onClick={restartGame}className="new-game">New Game</button>}
       </main>
     </>
   )

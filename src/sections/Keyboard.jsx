@@ -12,6 +12,7 @@ export default function Keyboard(props) {
         pressed={letter.pressed}
         correct={letter.correct}
         handler={props.handler}
+        disabled={props.disabled}
       />
     )
   }

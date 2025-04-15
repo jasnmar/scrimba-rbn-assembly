@@ -8,8 +8,9 @@ export default function Guess(props) {
         data-letter={letterObj.letter}
         guessed={letterObj.guessed}
         letter={letterObj.letter}
+        lost={props.lost}
       />
     )
   })
-  return <section className="word">{lettersObj}</section>
+  return <section aria-live="polite" className="word">{lettersObj}</section>
 }
